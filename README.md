@@ -1,14 +1,3 @@
-
----
-title: LlamaIndex RAG Chat
-emoji: 📄
-colorFrom: blue
-colorTo: indigo
-sdk: streamlit
-app_file: app.py
-pinned: false
----
-
 # RAG Chat - PDF 智能问答助手
 
 [![Hugging Face](https://img.shields.io/badge/🤗-Hugging%20Face%20Demo-blue)](https://huggingface.co/spaces/tina-su/LlamaIndex-RAG)
