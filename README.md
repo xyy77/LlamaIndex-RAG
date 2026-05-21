@@ -1,12 +1,3 @@
----
-title: LlamaIndex RAG Chat
-emoji: 📄
-colorFrom: blue
-colorTo: indigo
-sdk: streamlit
-app_file: app.py
-pinned: false
----
 
 # RAG Chat - PDF 智能问答助手
 
