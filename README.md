@@ -1,6 +1,8 @@
 
 # RAG Chat - PDF 智能问答助手
 
+[![Hugging Face](https://img.shields.io/badge/🤗-Hugging%20Face%20Demo-blue)](https://huggingface.co/spaces/tina-su/LlamaIndex-RAG)
+
 基于 **LlamaIndex** + **Streamlit** 实现的 RAG（检索增强生成）应用。用户上传 PDF 文件后，可以用自然语言提问，系统根据文档内容给出准确、可靠的回答。
 
 支持 **阿里云通义千问（DashScope）** 和 **OpenRouter** 多种大语言模型，并内置 RAG 质量评测功能。
