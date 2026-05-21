@@ -1,3 +1,13 @@
+---
+title: LlamaIndex RAG Chat
+emoji: 📄
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+app_file: app.py
+pinned: false
+---
+
 # RAG Chat - PDF 智能问答助手
 
 基于 **LlamaIndex** + **Streamlit** 实现的 RAG（检索增强生成）应用。用户上传 PDF 文件后，可以用自然语言提问，系统根据文档内容给出准确、可靠的回答。
