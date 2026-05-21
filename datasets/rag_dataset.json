@@ -1,0 +1,224 @@
+{
+  "examples": [
+    {
+      "query": "What were the two main things the author worked on before college?",
+      "reference_answer": "Writing and programming.",
+      "reference_contexts": ["Before college the two main things I worked on, outside of school, were writing and programming."]
+    },
+    {
+      "query": "What kind of machine did the author use for programming in 9th grade?",
+      "reference_answer": "An IBM 1401.",
+      "reference_contexts": ["The first programs I tried writing were on the IBM 1401 that our school district used for what was then called 'data processing.'"]
+    },
+    {
+      "query": "What programming language was used on the IBM 1401?",
+      "reference_answer": "An early version of Fortran.",
+      "reference_contexts": ["The language we used was an early version of Fortran."]
+    },
+    {
+      "query": "Why was the author puzzled by the 1401?",
+      "reference_answer": "Because the only form of input was data stored on punched cards, which he didn't have.",
+      "reference_contexts": ["I was puzzled by the 1401. I couldn't figure out what to do with it... The only form of input to programs was data stored on punched cards, and I didn't have any data stored on punched cards."]
+    },
+    {
+      "query": "What was the first microcomputer the author's friend built?",
+      "reference_answer": "A microcomputer built using a Heathkit.",
+      "reference_contexts": ["My friend Rich Draves built a microcomputer out of a Heathkit."]
+    },
+    {
+      "query": "What kind of computer did the author's father buy him?",
+      "reference_answer": "A TRS-80.",
+      "reference_contexts": ["Then my dad bought me a TRS-80."]
+    },
+    {
+      "query": "What did the author write on his TRS-80?",
+      "reference_answer": "Simple games, a program to predict how high his model rockets would fly, and a word processor.",
+      "reference_contexts": ["I wrote simple games, a program to predict how high my model rockets would fly, and a word processor that my father used to write at least one book."]
+    },
+    {
+      "query": "What did the author originally plan to study in college?",
+      "reference_answer": "Philosophy.",
+      "reference_contexts": ["I started college planning to study philosophy."]
+    },
+    {
+      "query": "Why did the author switch from philosophy to AI?",
+      "reference_answer": "Because he thought AI was going to solve the mysteries of the mind.",
+      "reference_contexts": ["I switched to AI. I thought AI was going to solve the mind."]
+    },
+    {
+      "query": "Where did the author go to grad school?",
+      "reference_answer": "Harvard.",
+      "reference_contexts": ["I applied to three grad schools: MIT, Harvard, and CMU... I went to Harvard."]
+    },
+    {
+      "query": "What book did the author write about Lisp?",
+      "reference_answer": "On Lisp.",
+      "reference_contexts": ["I wrote a book about Lisp hacking called On Lisp."]
+    },
+    {
+      "query": "What did the author realize about traditional AI during grad school?",
+      "reference_answer": "That it was a hoax.",
+      "reference_contexts": ["I realized that traditional AI was a hoax."]
+    },
+    {
+      "query": "What did the author decide to focus on instead of traditional AI?",
+      "reference_answer": "Lisp programming.",
+      "reference_contexts": ["I decided to focus on Lisp."]
+    },
+    {
+      "query": "What art school did the author attend?",
+      "reference_answer": "RISD (Rhode Island School of Design).",
+      "reference_contexts": ["I applied to RISD and was accepted."]
+    },
+    {
+      "query": "Where did the author go to study painting after attending RISD?",
+      "reference_answer": "Florence, Italy.",
+      "reference_contexts": ["I went to Florence to study painting."]
+    },
+    {
+      "query": "What software company did the author start with Robert Morris?",
+      "reference_answer": "Viaweb.",
+      "reference_contexts": ["Robert Morris and I started a company called Viaweb."]
+    },
+    {
+      "query": "What did Viaweb allow users to do?",
+      "reference_answer": "It allowed users to build online stores through a web browser.",
+      "reference_contexts": ["Viaweb allowed users to build online stores through a web browser."]
+    },
+    {
+      "query": "What programming language was Viaweb written in?",
+      "reference_answer": "Lisp.",
+      "reference_contexts": ["Viaweb was written in Lisp."]
+    },
+    {
+      "query": "Which company acquired Viaweb?",
+      "reference_answer": "Yahoo.",
+      "reference_contexts": ["Yahoo bought Viaweb."]
+    },
+    {
+      "query": "What was Viaweb renamed to after the acquisition?",
+      "reference_answer": "Yahoo Store.",
+      "reference_contexts": ["They renamed it Yahoo Store."]
+    },
+    {
+      "query": "What did the author do immediately after leaving Yahoo?",
+      "reference_answer": "He went back to painting and writing essays.",
+      "reference_contexts": ["After leaving Yahoo I went back to painting and writing essays."]
+    },
+    {
+      "query": "What framework did the author build to write web apps in Lisp?",
+      "reference_answer": "Arc.",
+      "reference_contexts": ["I started working on a new dialect of Lisp called Arc."]
+    },
+    {
+      "query": "What investment firm did the author start?",
+      "reference_answer": "Y Combinator.",
+      "reference_contexts": ["We started Y Combinator."]
+    },
+    {
+      "query": "Who were the co-founders of Y Combinator?",
+      "reference_answer": "Paul Graham, Jessica Livingston, Robert Morris, and Trevor Blackwell.",
+      "reference_contexts": ["The founders were me, Jessica Livingston, Robert Morris, and Trevor Blackwell."]
+    },
+    {
+      "query": "Where was the first Y Combinator batch located?",
+      "reference_answer": "Cambridge, Massachusetts.",
+      "reference_contexts": ["The first batch was in Cambridge."]
+    },
+    {
+      "query": "What news aggregator did the author create?",
+      "reference_answer": "Hacker News.",
+      "reference_contexts": ["I wrote Hacker News."]
+    },
+    {
+      "query": "Why was Hacker News created?",
+      "reference_answer": "To see if Arc could handle a web app with many users.",
+      "reference_contexts": ["I wrote Hacker News to test Arc."]
+    },
+    {
+      "query": "What was Hacker News originally called?",
+      "reference_answer": "Startup News.",
+      "reference_contexts": ["It was originally called Startup News."]
+    },
+    {
+      "query": "Where did Y Combinator eventually move to permanently?",
+      "reference_answer": "Silicon Valley.",
+      "reference_contexts": ["We moved YC to Silicon Valley permanently."]
+    },
+    {
+      "query": "What problem did Y Combinator solve for founders?",
+      "reference_answer": "Getting seed funding easily.",
+      "reference_contexts": ["We wanted to make it easy to get seed funding."]
+    },
+    {
+      "query": "Who took over Y Combinator when the author stepped down?",
+      "reference_answer": "Sam Altman.",
+      "reference_contexts": ["I asked Sam Altman if he wanted to be president of YC."]
+    },
+    {
+      "query": "Why did the author decide to step down from Y Combinator?",
+      "reference_answer": "He was tired and his mother was sick.",
+      "reference_contexts": ["I was tired, and my mother was sick."]
+    },
+    {
+      "query": "What did the author do after retiring from YC?",
+      "reference_answer": "He started painting again and worked on a new dialect of Lisp.",
+      "reference_contexts": ["I started painting again, and working on Bel."]
+    },
+    {
+      "query": "What is the name of the new Lisp dialect the author created?",
+      "reference_answer": "Bel.",
+      "reference_contexts": ["I named the new Lisp dialect Bel."]
+    },
+    {
+      "query": "What was the author's main motivation for creating Bel?",
+      "reference_answer": "To write a formal definition of Lisp.",
+      "reference_contexts": ["I wanted to write a formal definition of Lisp."]
+    },
+    {
+      "query": "What did the author learn about painting in Florence?",
+      "reference_answer": "That painting is a rigorous discipline.",
+      "reference_contexts": ["I learned that painting is a rigorous discipline."]
+    },
+    {
+      "query": "What did the author learn from consulting at Interleaf?",
+      "reference_answer": "That he wanted to build his own company.",
+      "reference_contexts": ["I realized I wanted to build my own company."]
+    },
+    {
+      "query": "What was the author's attitude towards the dot-com bubble?",
+      "reference_answer": "He thought most of the internet companies were fake.",
+      "reference_contexts": ["I thought most of the internet companies were fake."]
+    },
+    {
+      "query": "What was the worst thing about leaving YC for the author?",
+      "reference_answer": "Not working with Jessica anymore.",
+      "reference_contexts": ["The worst thing about leaving YC was not working with Jessica anymore."]
+    },
+    {
+      "query": "What does the author think about the concept of invented vs discovered?",
+      "reference_answer": "He believes that fundamental concepts, like Lisp, are discovered rather than invented.",
+      "reference_contexts": ["I believe that Lisp is discovered, not invented."]
+    },
+    {
+      "query": "What did the author compare writing essays to?",
+      "reference_answer": "Debugging software.",
+      "reference_contexts": ["Writing essays is like debugging software."]
+    },
+    {
+      "query": "What was the first essay the author published online?",
+      "reference_answer": "The Python Paradox.",
+      "reference_contexts": ["I published The Python Paradox."]
+    },
+    {
+      "query": "Why did the author think his early short stories were deep?",
+      "reference_answer": "Because they had characters with strong feelings.",
+      "reference_contexts": ["My stories... had hardly any plot, just characters with strong feelings, which I imagined made them deep."]
+    },
+    {
+      "query": "Who did the author write Viaweb with?",
+      "reference_answer": "Robert Morris.",
+      "reference_contexts": ["I wrote Viaweb with Robert Morris."]
+    }
+  ]
+}

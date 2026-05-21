@@ -1,0 +1,10 @@
+streamlit>=1.38.0
+llama-index>=0.10.0
+llama-index-llms-openai-like>=0.2.0
+llama-index-llms-openrouter>=0.2.0
+llama-index-embeddings-dashscope>=0.2.0
+llama-index-postprocessor-dashscope-rerank>=0.2.0
+llama-index-readers-file>=0.2.0
+pymupdf
+python-dotenv
+pandas
