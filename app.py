@@ -9,6 +9,15 @@ import re
 load_dotenv()
 
 from utils import get_chat_engine, ALL_MODELS
+from legal_chunker import LegalArticleSplitter
+
+LEGAL_DISCLAIMER = (
+    ":warning: **免责声明**：本工具生成的回答基于公开法律条文，"
+    "由 AI 模型输出，仅供参考，不构成正式法律意见。"
+    "涉及具体法律事务，请咨询执业律师。"
+)
+
+ARTICLE_PATTERN = re.compile(r'第[零〇一二三四五六七八九十百千万0-9]+条')
 
 
 def format_reasoning_response(thinking_content):
@@ -39,7 +48,7 @@ def display_assistant_message(content):
 
 
 def main():
-    st.set_page_config(page_title="RAG Chat", layout="wide")
+    st.set_page_config(page_title="法智问答", layout="wide")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -52,9 +61,9 @@ def main():
     if "chat_engine" not in st.session_state:
         st.session_state.chat_engine = None
 
-    st.title("RAG Chat with LlamaIndex")
+    st.title("法智问答 — 法律条文智能助手")
 
-    if st.button(" 清空对话"):
+    if st.button("清空对话"):
         st.session_state.messages = []
         st.session_state.docs_loaded = False
         if st.session_state.temp_dir:
@@ -77,7 +86,7 @@ def main():
         st.subheader("上传文件")
         uploaded_file = st.file_uploader(
             "选择文件",
-            type=["pdf", "txt"],
+            type=["pdf", "txt", "docx", "doc", "md", "markdown", "csv", "json", "html", "htm"],
             accept_multiple_files=False
         )
 
@@ -118,13 +127,25 @@ def main():
 
             if st.session_state.docs_loaded and st.session_state.chat_engine is None:
                 with st.spinner("正在构建索引..."):
+                    docs = st.session_state.documents
+                    # 自动检测是否为法律文档（包含条款编号）
+                    is_legal = any(
+                        ARTICLE_PATTERN.search(doc.text)
+                        for doc in docs
+                    )
+                    splitter = LegalArticleSplitter() if is_legal else None
+
                     st.session_state.chat_engine = get_chat_engine(
                         selected_model,
-                        docs=st.session_state.documents,
+                        docs=docs,
                         m_size=ALL_MODELS[selected_model]['context_window'] * 0.5,
-                        enable_semantic_splitter=False
+                        enable_semantic_splitter=False,
+                        custom_splitter=splitter,
                     )
-                st.success("索引构建完成")
+                st.success("索引构建完成" + ("（已启用条款级切分）" if is_legal else ""))
+
+        st.divider()
+        st.caption(LEGAL_DISCLAIMER)
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -133,7 +154,7 @@ def main():
             else:
                 st.markdown(message["content"])
 
-    if prompt := st.chat_input("请问关于这份文档的任何问题..."):
+    if prompt := st.chat_input("请输入您的法律问题..."):
         if not st.session_state.docs_loaded:
             st.error("请先上传文档")
             st.stop()
@@ -155,6 +176,24 @@ def main():
                         message_placeholder.markdown(full_response + "▌")
 
                     message_placeholder.markdown(full_response)
+
+                    # 显示参考条款原文
+                    if hasattr(stream_response, 'source_nodes') and stream_response.source_nodes:
+                        with st.expander("参考条款原文"):
+                            for i, node in enumerate(stream_response.source_nodes, 1):
+                                article = node.metadata.get("article", "")
+                                law = node.metadata.get("law_name", "")
+                                label = f"{law} {article}" if law else (article or f"来源 {i}")
+                                st.caption(f"**{label}**")
+                                try:
+                                    text = node.get_content()
+                                except Exception:
+                                    text = str(node)
+                                st.text(text[:500])
+                                st.divider()
+
+                    # 免责声明
+                    st.caption(LEGAL_DISCLAIMER)
 
                     st.session_state.messages.append({"role": "assistant", "content": full_response})
 

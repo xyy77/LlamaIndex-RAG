@@ -1,18 +1,18 @@
 import os
 
 from dotenv import load_dotenv
-from llama_index.core import Settings, SummaryIndex, VectorStoreIndex
+from llama_index.core import Settings, VectorStoreIndex
 from llama_index.core.chat_engine import ContextChatEngine
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.node_parser import SentenceSplitter, SemanticSplitterNodeParser
-from llama_index.core.retrievers import RouterRetriever
-from llama_index.core.selectors import LLMSingleSelector
-from llama_index.core.selectors.llm_selectors import DEFAULT_SINGLE_SELECT_PROMPT_TMPL
-from llama_index.core.tools import RetrieverTool
+from llama_index.core.retrievers import QueryFusionRetriever
+from llama_index.core.retrievers.fusion_retriever import FUSION_MODES
 from llama_index.embeddings.dashscope import DashScopeEmbedding
 from llama_index.llms.openai_like import OpenAILike
 from llama_index.llms.openrouter import OpenRouter
 from llama_index.postprocessor.dashscope_rerank import DashScopeRerank
+from llama_index.retrievers.bm25 import BM25Retriever
+import jieba
 import dashscope
 load_dotenv()
 
@@ -83,6 +83,7 @@ def get_chat_engine(selected_model,
                     m_size=40960,
                     enable_reranker=True,
                     enable_semantic_splitter=False,
+                    custom_splitter=None,
                     chk_size=1024,
                     chk_overlap=150,
                     verbose=True):
@@ -96,36 +97,35 @@ def get_chat_engine(selected_model,
     Settings.llm = llm
     Settings.embed_model = embed_model
 
-    if enable_semantic_splitter:
+    if custom_splitter:
+        splitter = custom_splitter
+    elif enable_semantic_splitter:
         splitter = SemanticSplitterNodeParser(buffer_size=1, breakpoint_percentile_threshold=95, embed_model=embed_model)
     else:
         splitter = SentenceSplitter(chunk_size=chk_size, chunk_overlap=chk_overlap)
 
     nodes = splitter.get_nodes_from_documents(docs)
 
-    summary_index = SummaryIndex(nodes)
+    # 向量索引 + 语义检索器
     vector_index = VectorStoreIndex(nodes)
-
-    summary_retriever = summary_index.as_retriever()
     vector_retriever = vector_index.as_retriever(similarity_top_k=top_k)
 
-    summary_tool = RetrieverTool.from_defaults(
-        retriever=summary_retriever,
-        description="Useful for summarization questions and getting a high-level overview."
+    # BM25 关键词检索器（精确术语匹配，使用 jieba 中文分词）
+    def chinese_tokenizer(text: str):
+        return list(jieba.cut(text))
+
+    bm25_retriever = BM25Retriever.from_defaults(
+        nodes=nodes,
+        similarity_top_k=top_k,
+        tokenizer=chinese_tokenizer,
     )
 
-    vector_tool = RetrieverTool.from_defaults(
-        retriever=vector_retriever,
-        description="Useful for retrieving specific context, details, quotes, or facts from the document."
-    )
-
-    # 在默认prompt后加入格式要求，确保输出稳定可解析
-    new_tmpl = DEFAULT_SINGLE_SELECT_PROMPT_TMPL + "\nCRITICAL: You must use double quotes for all JSON keys and string values. Do not use single quotes or unquoted keys."
-
-    router_retriever = RouterRetriever(
-        selector=LLMSingleSelector.from_defaults(prompt_template_str=new_tmpl),
-        retriever_tools=[summary_tool, vector_tool],
-        verbose=True
+    # RRF 融合：结合语义和关键词两路检索结果
+    fusion_retriever = QueryFusionRetriever(
+        retrievers=[vector_retriever, bm25_retriever],
+        similarity_top_k=top_k,
+        mode=FUSION_MODES.RECIPROCAL_RANK,
+        verbose=verbose,
     )
 
     memory = ChatMemoryBuffer.from_defaults(
@@ -139,11 +139,14 @@ def get_chat_engine(selected_model,
         post_processors.append(reranker)
 
     chat_engine = ContextChatEngine.from_defaults(
-        retriever=router_retriever,
+        retriever=fusion_retriever,
         memory=memory,
         system_prompt=(
-            "你是一个专业的PDF问答助手，要根据提供的文件内容进行回答，"
-            "不要编造内容，优先基于提供的PDF内容。"
+            "你是一个专业的法律条文助手，专注于回答基于《民法典》《劳动合同法》等中国法律的问题。"
+            "你必须严格依据提供的法律条款内容回答，不得编造任何法律条文。"
+            "如果检索到的条款不能完全回答用户问题，请明确说明：根据现有条款，无法完全回答，建议咨询专业律师。"
+            "回答时请标明所引用的具体条款（例如：依据《民法典》第XX条）。"
+            "最后必须加上免责声明：以上内容由AI生成，不构成正式法律意见，如有疑问请咨询执业律师。"
         ),
         node_postprocessors=post_processors,
         verbose=verbose

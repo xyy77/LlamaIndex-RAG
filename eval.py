@@ -5,21 +5,39 @@ from llama_index.core import SimpleDirectoryReader
 from llama_index.core.llama_dataset import LabelledRagDataset
 from utils import get_chat_engine, ALL_MODELS, get_llm
 from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
+from legal_chunker import LegalArticleSplitter
+import re
 import pandas as pd
-
-dataset_path = "datasets/rag_dataset.json"
 
 load_dotenv()
 
+# === 配置：修改此处切换数据集和文档目录 ===
+dataset_path = "datasets/legal_dataset.json"
+docs_dir = "Files/legal"
+enable_article_splitter = True  # 法律文档使用条款切分
+# =============================================
+
 eval_model = "Qwen Max"
-model_name = "Llama 3.1 8B"
+model_name = "Qwen Max"
 enable_semantic_splitter = False
 chunk_size = 1024
 chunk_overlap = 150
+
+docs = SimpleDirectoryReader(docs_dir).load_data()
+
+# 检测是否需要条款切分
+if enable_article_splitter:
+    ARTICLE_PATTERN = re.compile(r'第[零〇一二三四五六七八九十百千万0-9]+条')
+    is_legal = any(ARTICLE_PATTERN.search(doc.text) for doc in docs)
+    splitter = LegalArticleSplitter() if is_legal else None
+else:
+    splitter = None
+
 chat_engine = get_chat_engine(model_name,
-                              docs=SimpleDirectoryReader('Files').load_data(),
+                              docs=docs,
                               m_size=ALL_MODELS[model_name]['context_window'] * 0.5,
                               enable_semantic_splitter=enable_semantic_splitter,
+                              custom_splitter=splitter,
                               enable_reranker=False,
                               verbose=False)
 
@@ -67,7 +85,7 @@ for i, example in enumerate(rag_dataset.examples):
 df = pd.DataFrame(results_list)
 
 os.makedirs("eval", exist_ok=True)
-output_file = f"eval/{model_name.lower().replace(' ', '_')}_result{1 if enable_semantic_splitter else 0}.csv"
+output_file = f"eval/{model_name.lower().replace(' ', '_')}_legal_result.csv"
 print(f"评估完成！结果已保存至: {output_file}\n")
 
 # 计算指标
@@ -78,15 +96,17 @@ df.to_csv(output_file, index=False, encoding='utf-8')
 print("\n" + "="*40)
 print(f"      RAG 评估报告 - {model_name}")
 print("="*40)
-print(f"配置信息:")
+print("配置信息:")
 print(f" - 模型名称:   {model_name}")
-if not enable_semantic_splitter:
+if enable_article_splitter:
+    print(f" - 分块策略:   法律条款切分")
+elif not enable_semantic_splitter:
     print(f" - 分块大小:   {chunk_size}")
     print(f" - 分块重叠:   {chunk_overlap}")
 else:
     print(f" - 分块策略:   语义分块")
 print("-" * 40)
-print(f"核心指标:")
+print("核心指标:")
 print(f" - 忠实度 (Faithfulness): {faith_rate:.2%}")
 print(f" - 相关性 (Relevancy):    {relev_rate:.2%}")
 print("-" * 40)
